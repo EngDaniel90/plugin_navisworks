@@ -197,15 +197,19 @@ namespace LiftingTestPlugin
 
                     // 2. Check for Results
                     // We check if the test has any 'Active' or 'New' results at this position.
-                    foreach (var result in test.Children)
+                    // PERFORMANCE: If we already detected a collision, we don't need to check again to set the flag.
+                    if (!collisionDetected)
                     {
-                        ClashResult cr = result as ClashResult;
-                        if (cr != null && (cr.Status == ClashResultStatus.New || cr.Status == ClashResultStatus.Active))
+                        foreach (var result in test.Children)
                         {
-                            collisionDetected = true;
-                            // We could break here if we just want to know IF there is a collision,
-                            // but usually we want to record the full path or at least continue the visual simulation.
-                            // For this requirement, we just flag it.
+                            ClashResult cr = result as ClashResult;
+                            if (cr != null && (cr.Status == ClashResultStatus.New || cr.Status == ClashResultStatus.Active))
+                            {
+                                collisionDetected = true;
+                                // PERFORMANCE: Found a collision at this step. No need to check other results.
+                                // We continue the outer loop to preserve the visual simulation.
+                                break;
+                            }
                         }
                     }
 
