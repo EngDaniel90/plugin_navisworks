@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Diagnostics;
 using System.Windows.Forms;
 using Autodesk.Navisworks.Api;
 using Autodesk.Navisworks.Api.Clash;
@@ -48,7 +50,7 @@ namespace LiftingTestPlugin
             }
         }
 
-        private void btnRun_Click(object sender, EventArgs e)
+        private async void btnRun_Click(object sender, EventArgs e)
         {
             if (cmbSetsFolder.SelectedIndex == -1)
             {
@@ -114,7 +116,9 @@ namespace LiftingTestPlugin
                     if (progressBar.Value >= progressBar.Maximum) progressBar.Value = progressBar.Maximum - 1; // Prevent overflow
 
                     lblStatus.Text = $"Processando módulo: {module.DisplayName}";
-                    Application.DoEvents();
+
+                    // Allow UI to update before starting heavy work for this module
+                    await Task.Delay(1);
 
                     SelectionSet set = module as SelectionSet;
                     if (set == null) continue;
@@ -138,7 +142,7 @@ namespace LiftingTestPlugin
                     testsData.Tests.AddTest(test);
 
                     // 2. Simulation
-                    bool collisionFound = RunSimulation(doc, set, test, userHeightMeters, userStepMeters);
+                    bool collisionFound = await RunSimulation(doc, set, test, userHeightMeters, userStepMeters);
 
                     if (collisionFound)
                     {
@@ -172,13 +176,16 @@ namespace LiftingTestPlugin
             }
         }
 
-        private bool RunSimulation(Document doc, SelectionSet set, ClashTest test, double heightMeters, double stepMeters)
+        private async Task<bool> RunSimulation(Document doc, SelectionSet set, ClashTest test, double heightMeters, double stepMeters)
         {
             ModelItemCollection items = set.GetSelectedItems(doc);
             if (items.Count == 0) return false;
 
             double currentZMeters = heightMeters;
             bool collisionDetected = false;
+
+            // Stopwatch to throttle UI updates
+            Stopwatch sw = Stopwatch.StartNew();
 
             try
             {
@@ -190,7 +197,13 @@ namespace LiftingTestPlugin
                 // Simulation Loop
                 while (currentZMeters >= 0)
                 {
-                    Application.DoEvents();
+                    // Throttle UI updates/yields to improve performance vs DoEvents
+                    // Yield every ~50ms to keep UI responsive without overhead of yielding every loop
+                    if (sw.ElapsedMilliseconds > 50)
+                    {
+                        await Task.Delay(1);
+                        sw.Restart();
+                    }
 
                     // 1. Run Clash Test
                     doc.GetClash().TestsData.TestsRunTest(test);
