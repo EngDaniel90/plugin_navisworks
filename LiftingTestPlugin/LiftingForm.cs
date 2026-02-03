@@ -188,9 +188,15 @@ namespace LiftingTestPlugin
                 doc.Models.OverridePermanentTransform(items, Transform3D.CreateTranslation(vec), true);
 
                 // Simulation Loop
+                int stepCounter = 0;
                 while (currentZMeters >= 0)
                 {
-                    Application.DoEvents();
+                    stepCounter++;
+                    // Optimization: Update UI only every 10 steps to reduce overhead
+                    if (stepCounter % 10 == 0)
+                    {
+                        Application.DoEvents();
+                    }
 
                     // 1. Run Clash Test
                     doc.GetClash().TestsData.TestsRunTest(test);
@@ -222,6 +228,9 @@ namespace LiftingTestPlugin
 
                     if (progressBar.Value < progressBar.Maximum) progressBar.Increment(1);
                 }
+
+                // Ensure UI is updated at the end of the loop
+                Application.DoEvents();
             }
             finally
             {
