@@ -187,13 +187,16 @@ namespace LiftingTestPlugin
                 Vector3D vec = new Vector3D(0, 0, zFeet);
                 doc.Models.OverridePermanentTransform(items, Transform3D.CreateTranslation(vec), true);
 
+                // Get Clash TestsData once to avoid repeated retrieval in the loop
+                var clashTests = doc.GetClash().TestsData;
+
                 // Simulation Loop
                 while (currentZMeters >= 0)
                 {
                     Application.DoEvents();
 
                     // 1. Run Clash Test
-                    doc.GetClash().TestsData.TestsRunTest(test);
+                    clashTests.TestsRunTest(test);
 
                     // 2. Check for Results
                     // We check if the test has any 'Active' or 'New' results at this position.
