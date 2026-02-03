@@ -177,6 +177,9 @@ namespace LiftingTestPlugin
             ModelItemCollection items = set.GetSelectedItems(doc);
             if (items.Count == 0) return false;
 
+            // Cache DocumentModels to avoid repeated property access overhead
+            var documentModels = doc.Models;
+
             double currentZMeters = heightMeters;
             bool collisionDetected = false;
 
@@ -185,7 +188,7 @@ namespace LiftingTestPlugin
                 // Initial Move to Top (+Z)
                 double zFeet = currentZMeters * MeterToFoot;
                 Vector3D vec = new Vector3D(0, 0, zFeet);
-                doc.Models.OverridePermanentTransform(items, Transform3D.CreateTranslation(vec), true);
+                documentModels.OverridePermanentTransform(items, Transform3D.CreateTranslation(vec), true);
 
                 // Simulation Loop
                 while (currentZMeters >= 0)
@@ -217,7 +220,7 @@ namespace LiftingTestPlugin
                     {
                         zFeet = currentZMeters * MeterToFoot;
                         vec = new Vector3D(0, 0, zFeet);
-                        doc.Models.OverridePermanentTransform(items, Transform3D.CreateTranslation(vec), true);
+                        documentModels.OverridePermanentTransform(items, Transform3D.CreateTranslation(vec), true);
                     }
 
                     if (progressBar.Value < progressBar.Maximum) progressBar.Increment(1);
@@ -226,7 +229,7 @@ namespace LiftingTestPlugin
             finally
             {
                 // Reset Final (Return to original position)
-                doc.Models.OverridePermanentTransform(items, Transform3D.Identity, true);
+                documentModels.OverridePermanentTransform(items, Transform3D.Identity, true);
             }
 
             return collisionDetected;
