@@ -203,9 +203,7 @@ namespace LiftingTestPlugin
                         if (cr != null && (cr.Status == ClashResultStatus.New || cr.Status == ClashResultStatus.Active))
                         {
                             collisionDetected = true;
-                            // We could break here if we just want to know IF there is a collision,
-                            // but usually we want to record the full path or at least continue the visual simulation.
-                            // For this requirement, we just flag it.
+                            break;
                         }
                     }
 
