@@ -177,6 +177,10 @@ namespace LiftingTestPlugin
             ModelItemCollection items = set.GetSelectedItems(doc);
             if (items.Count == 0) return false;
 
+            // Cache API objects to avoid repeated lookups in the loop
+            var models = doc.Models;
+            var testsData = doc.GetClash().TestsData;
+
             double currentZMeters = heightMeters;
             bool collisionDetected = false;
 
@@ -185,7 +189,7 @@ namespace LiftingTestPlugin
                 // Initial Move to Top (+Z)
                 double zFeet = currentZMeters * MeterToFoot;
                 Vector3D vec = new Vector3D(0, 0, zFeet);
-                doc.Models.OverridePermanentTransform(items, Transform3D.CreateTranslation(vec), true);
+                models.OverridePermanentTransform(items, Transform3D.CreateTranslation(vec), true);
 
                 // Simulation Loop
                 while (currentZMeters >= 0)
@@ -193,7 +197,7 @@ namespace LiftingTestPlugin
                     Application.DoEvents();
 
                     // 1. Run Clash Test
-                    doc.GetClash().TestsData.TestsRunTest(test);
+                    testsData.TestsRunTest(test);
 
                     // 2. Check for Results
                     // We check if the test has any 'Active' or 'New' results at this position.
@@ -206,6 +210,7 @@ namespace LiftingTestPlugin
                             // We could break here if we just want to know IF there is a collision,
                             // but usually we want to record the full path or at least continue the visual simulation.
                             // For this requirement, we just flag it.
+                            break; // Optimization: Stop checking other results for this step
                         }
                     }
 
@@ -217,7 +222,7 @@ namespace LiftingTestPlugin
                     {
                         zFeet = currentZMeters * MeterToFoot;
                         vec = new Vector3D(0, 0, zFeet);
-                        doc.Models.OverridePermanentTransform(items, Transform3D.CreateTranslation(vec), true);
+                        models.OverridePermanentTransform(items, Transform3D.CreateTranslation(vec), true);
                     }
 
                     if (progressBar.Value < progressBar.Maximum) progressBar.Increment(1);
@@ -226,7 +231,7 @@ namespace LiftingTestPlugin
             finally
             {
                 // Reset Final (Return to original position)
-                doc.Models.OverridePermanentTransform(items, Transform3D.Identity, true);
+                models.OverridePermanentTransform(items, Transform3D.Identity, true);
             }
 
             return collisionDetected;
