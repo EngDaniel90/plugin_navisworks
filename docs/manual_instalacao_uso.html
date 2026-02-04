@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual de Instalação e Uso - Plugins Navisworks</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #005A9E;
+            text-align: center;
+            border-bottom: 2px solid #005A9E;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #0078D4;
+            margin-top: 30px;
+            border-left: 5px solid #0078D4;
+            padding-left: 10px;
+        }
+        h3 {
+            color: #004578;
+            margin-top: 20px;
+        }
+        .step {
+            background: #fff;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .step-number {
+            font-weight: bold;
+            color: #fff;
+            background-color: #0078D4;
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            text-align: center;
+            line-height: 25px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+        code {
+            background-color: #f0f0f0;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: Consolas, monospace;
+            color: #d63384;
+        }
+        .warning {
+            background-color: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .mock-img {
+            display: block;
+            background-color: #e9ecef;
+            border: 2px dashed #ced4da;
+            color: #6c757d;
+            text-align: center;
+            padding: 40px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #0078D4;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            background-color: #005A9E;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Manual de Instalação e Uso: Plugins Navisworks</h1>
+    <p>Este guia detalhado irá orientá-lo passo a passo sobre como compilar, instalar e utilizar os plugins <strong>Auto Lifting Clash Analysis</strong> e <strong>Viewpoint Exporter</strong> para Autodesk Navisworks Manage 2026.</p>
+
+    <div class="warning">
+        <strong>Nota Importante:</strong> Este tutorial assume que você tem o Autodesk Navisworks Manage 2026 instalado em seu computador.
+    </div>
+
+    <h2>Parte 1: Instalação do Visual Studio Community</h2>
+    <p>Para transformar o código (texto) em um plugin funcional (arquivo .dll), você precisa de um compilador. Usaremos o Visual Studio Community, que é gratuito.</p>
+
+    <div class="step">
+        <span class="step-number">1</span> Acesse o site oficial da Microsoft para baixar o <a href="https://visualstudio.microsoft.com/vs/community/" target="_blank">Visual Studio Community 2022</a>.
+    </div>
+    <div class="step">
+        <span class="step-number">2</span> Execute o instalador (<code>VisualStudioSetup.exe</code>).
+    </div>
+    <div class="step">
+        <span class="step-number">3</span> Durante a instalação, você verá uma tela de "Cargas de Trabalho" (Workloads). É crucial selecionar a opção:
+        <br><strong>✅ Desenvolvimento para desktop com .NET</strong> (.NET Desktop Development)
+        <div class="mock-img">
+            [Imagem: Tela do instalador do VS mostrando a opção '.NET Desktop Development' marcada]
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-number">4</span> Clique em <strong>Instalar</strong> e aguarde a conclusão.
+    </div>
+
+    <h2>Parte 2: Compilando os Plugins</h2>
+
+    <h3>1. Abrindo o Código</h3>
+    <div class="step">
+        <span class="step-number">1</span> Baixe os arquivos deste repositório para uma pasta em seu computador (ex: <code>C:\MeusPluginsNavisworks</code>).
+    </div>
+    <div class="step">
+        <span class="step-number">2</span> Abra o Visual Studio 2022.
+    </div>
+    <div class="step">
+        <span class="step-number">3</span> Clique em "Abrir um projeto ou solução" e selecione o arquivo <code>.csproj</code> do plugin que deseja compilar (ex: <code>AutoLiftingClashAnalysis.csproj</code> ou <code>ViewpointExporter.csproj</code>).
+    </div>
+
+    <h3>2. Verificando Referências</h3>
+    <div class="step">
+        <p>O código precisa saber onde o Navisworks está instalado para funcionar. O projeto está configurado para o caminho padrão:</p>
+        <code>C:\Program Files\Autodesk\Navisworks Manage 2026\</code>
+        <p>Se o seu Navisworks estiver instalado em outro local (ou outra versão), você precisará:</p>
+        <ol>
+            <li>No Visual Studio, olhe para o painel "Gerenciador de Soluções" (Solution Explorer) à direita.</li>
+            <li>Expanda <strong>Dependências</strong> > <strong>Assemblies</strong>.</li>
+            <li>Se houver um ícone de alerta amarelo ⚠️, clique com o botão direito na dependência e selecione <strong>Propriedades</strong> ou remova e adicione novamente apontando para a pasta correta do seu Navisworks (procure por <code>Autodesk.Navisworks.Api.dll</code>).</li>
+        </ol>
+    </div>
+
+    <h3>3. Compilando (Build)</h3>
+    <div class="step">
+        <span class="step-number">1</span> No topo da tela, mude a configuração de <code>Debug</code> para <code>Release</code> (recomendado para uso final).
+        <div class="mock-img">
+            [Imagem: Barra de ferramentas superior do VS com 'Release' e 'Any CPU' selecionados]
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-number">2</span> Vá no menu <strong>Compilação</strong> (Build) > <strong>Compilar Solução</strong> (Build Solution) ou pressione <code>Ctrl + Shift + B</code>.
+    </div>
+    <div class="step">
+        <span class="step-number">3</span> No rodapé, você deverá ver a mensagem: <code>Compilação com êxito</code>.
+    </div>
+    <div class="step">
+        <span class="step-number">4</span> Navegue até a pasta do projeto no Windows Explorer:
+        <br><code>...\AutoLiftingClashAnalysis\bin\Release\net8.0-windows\</code>
+        <br>Lá você encontrará os arquivos <strong>.dll</strong> gerados (ex: <code>AutoLiftingClashAnalysis.dll</code>).
+    </div>
+
+    <h2>Parte 3: Instalando no Navisworks</h2>
+    <p>Agora que você tem os arquivos compilados, vamos instalá-los.</p>
+
+    <div class="step">
+        <span class="step-number">1</span> Feche o Navisworks se estiver aberto.
+    </div>
+    <div class="step">
+        <span class="step-number">2</span> Navegue até a pasta de Plugins do Navisworks. Geralmente fica em um destes locais:
+        <ul>
+            <li><code>C:\ProgramData\Autodesk\Navisworks Manage 2026\Plugins\</code> (Para todos os usuários)</li>
+            <li><code>%AppData%\Autodesk Navisworks Manage 2026\Plugins\</code> (Apenas para seu usuário)</li>
+        </ul>
+        <em>Se a pasta "Plugins" não existir, você pode criá-la.</em>
+    </div>
+    <div class="step">
+        <span class="step-number">3</span> Crie uma pasta para cada plugin dentro do diretório Plugins:
+        <br>📂 <code>Plugins</code>
+        <br>&nbsp;&nbsp;📂 <code>AutoLiftingClashAnalysis</code>
+        <br>&nbsp;&nbsp;📂 <code>ViewpointExporter</code>
+    </div>
+    <div class="step">
+        <span class="step-number">4</span> Copie <strong>todos</strong> os arquivos da pasta de saída do Visual Studio (<code>bin\Release\net8.0-windows\</code>) para as respectivas pastas que você criou.
+    </div>
+
+    <h2>Parte 4: Como Utilizar</h2>
+
+    <h3>🏗️ Auto Lifting Clash Analysis</h3>
+    <p>Este plugin simula o içamento de módulos e verifica colisões automaticamente.</p>
+    <div class="step">
+        <span class="step-number">1</span> Abra seu modelo no Navisworks.
+    </div>
+    <div class="step">
+        <span class="step-number">2</span> Vá para a aba <strong>Add-ins</strong> (Complementos) no menu superior. Você verá o botão do plugin.
+    </div>
+    <div class="step">
+        <span class="step-number">3</span> Ao clicar, uma janela abrirá:
+        <ul>
+            <li><strong>Pasta de Selection Sets:</strong> Selecione a pasta que contém os Sets dos módulos a serem içados.</li>
+            <li><strong>Altura de Içamento:</strong> Defina até que altura (em metros) o objeto subirá.</li>
+            <li><strong>Passo de Descida:</strong> Define a precisão da simulação (intervalo de verificação).</li>
+        </ul>
+    </div>
+    <div class="step">
+        <span class="step-number">4</span> Clique em <strong>Iniciar Simulação</strong>. O plugin processará o movimento e avisará se houver colisões.
+    </div>
+
+    <h3>📷 Viewpoint Exporter</h3>
+    <p>Este plugin exporta todas as suas vistas salvas como imagens PNG.</p>
+    <div class="step">
+        <span class="step-number">1</span> Organize suas <em>Saved Viewpoints</em> no Navisworks como desejar.
+    </div>
+    <div class="step">
+        <span class="step-number">2</span> Vá para a aba <strong>Add-ins</strong> e clique em "Exportar Viewpoints".
+    </div>
+    <div class="step">
+        <span class="step-number">3</span> Uma janela pedirá para você selecionar a <strong>Pasta de Destino</strong> onde as imagens serão salvas.
+    </div>
+    <div class="step">
+        <span class="step-number">4</span> Após selecionar, aguarde a mensagem de "Concluído". Todas as imagens estarão na pasta escolhida, com nomes limpos e seguros.
+    </div>
+
+    <hr>
+    <p style="text-align: center; font-size: 0.9em; color: #666;">Desenvolvido por Jules (IA) | 2023</p>
+
+</body>
+</html>
