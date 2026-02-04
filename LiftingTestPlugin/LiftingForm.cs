@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks; // Added for async/await
 using System.Windows.Forms;
 using Autodesk.Navisworks.Api;
 using Autodesk.Navisworks.Api.Clash;
@@ -48,7 +49,7 @@ namespace LiftingTestPlugin
             }
         }
 
-        private void btnRun_Click(object sender, EventArgs e)
+        private async void btnRun_Click(object sender, EventArgs e)
         {
             if (cmbSetsFolder.SelectedIndex == -1)
             {
@@ -114,7 +115,9 @@ namespace LiftingTestPlugin
                     if (progressBar.Value >= progressBar.Maximum) progressBar.Value = progressBar.Maximum - 1; // Prevent overflow
 
                     lblStatus.Text = $"Processando módulo: {module.DisplayName}";
-                    Application.DoEvents();
+
+                    // Small delay to allow UI to update before heavy lifting
+                    await Task.Delay(10);
 
                     SelectionSet set = module as SelectionSet;
                     if (set == null) continue;
@@ -137,8 +140,8 @@ namespace LiftingTestPlugin
 
                     testsData.Tests.AddTest(test);
 
-                    // 2. Simulation
-                    bool collisionFound = RunSimulation(doc, set, test, userHeightMeters, userStepMeters);
+                    // 2. Simulation (Async)
+                    bool collisionFound = await RunSimulation(doc, set, test, userHeightMeters, userStepMeters);
 
                     if (collisionFound)
                     {
@@ -172,7 +175,7 @@ namespace LiftingTestPlugin
             }
         }
 
-        private bool RunSimulation(Document doc, SelectionSet set, ClashTest test, double heightMeters, double stepMeters)
+        private async Task<bool> RunSimulation(Document doc, SelectionSet set, ClashTest test, double heightMeters, double stepMeters)
         {
             ModelItemCollection items = set.GetSelectedItems(doc);
             if (items.Count == 0) return false;
@@ -180,20 +183,26 @@ namespace LiftingTestPlugin
             double currentZMeters = heightMeters;
             bool collisionDetected = false;
 
+            // Cache repeatedly accessed properties
+            var docModels = doc.Models;
+            var clashTestsData = doc.GetClash().TestsData;
+
             try
             {
                 // Initial Move to Top (+Z)
                 double zFeet = currentZMeters * MeterToFoot;
                 Vector3D vec = new Vector3D(0, 0, zFeet);
-                doc.Models.OverridePermanentTransform(items, Transform3D.CreateTranslation(vec), true);
+                docModels.OverridePermanentTransform(items, Transform3D.CreateTranslation(vec), true);
 
                 // Simulation Loop
                 while (currentZMeters >= 0)
                 {
-                    Application.DoEvents();
+                    // Throttle the loop to keep UI responsive without Application.DoEvents()
+                    // 50ms delay allows about 20 frames per second, sufficient for visual feedback
+                    await Task.Delay(50);
 
                     // 1. Run Clash Test
-                    doc.GetClash().TestsData.TestsRunTest(test);
+                    clashTestsData.TestsRunTest(test);
 
                     // 2. Check for Results
                     // We check if the test has any 'Active' or 'New' results at this position.
@@ -217,7 +226,7 @@ namespace LiftingTestPlugin
                     {
                         zFeet = currentZMeters * MeterToFoot;
                         vec = new Vector3D(0, 0, zFeet);
-                        doc.Models.OverridePermanentTransform(items, Transform3D.CreateTranslation(vec), true);
+                        docModels.OverridePermanentTransform(items, Transform3D.CreateTranslation(vec), true);
                     }
 
                     if (progressBar.Value < progressBar.Maximum) progressBar.Increment(1);
@@ -226,7 +235,7 @@ namespace LiftingTestPlugin
             finally
             {
                 // Reset Final (Return to original position)
-                doc.Models.OverridePermanentTransform(items, Transform3D.Identity, true);
+                docModels.OverridePermanentTransform(items, Transform3D.Identity, true);
             }
 
             return collisionDetected;
