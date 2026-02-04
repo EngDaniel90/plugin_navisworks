@@ -1,4 +1,4 @@
-namespace LiftingTestPlugin
+namespace AutoLiftingClashAnalysis
 {
     partial class LiftingForm
     {

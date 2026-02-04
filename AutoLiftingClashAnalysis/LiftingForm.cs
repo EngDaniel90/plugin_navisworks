@@ -7,7 +7,7 @@ using Autodesk.Navisworks.Api;
 using Autodesk.Navisworks.Api.Clash;
 using Autodesk.Navisworks.Api.Plugins;
 
-namespace LiftingTestPlugin
+namespace AutoLiftingClashAnalysis
 {
     public partial class LiftingForm : Form
     {
@@ -25,7 +25,7 @@ namespace LiftingTestPlugin
             try
             {
                 cmbSetsFolder.Items.Clear();
-                Document doc = Application.ActiveDocument;
+                Document doc = Autodesk.Navisworks.Api.Application.ActiveDocument;
                 if (doc == null || doc.IsClear) return;
 
                 if (doc.SelectionSets.RootItem != null)
@@ -66,7 +66,7 @@ namespace LiftingTestPlugin
 
             try
             {
-                Document doc = Application.ActiveDocument;
+                Document doc = Autodesk.Navisworks.Api.Application.ActiveDocument;
                 string folderName = cmbSetsFolder.SelectedItem.ToString();
 
                 // Validate Inputs
