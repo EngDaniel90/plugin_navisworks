@@ -7,6 +7,8 @@
     <PlatformTarget>x64</PlatformTarget>
     <AssemblyName>AutoLiftingClashAnalysis</AssemblyName>
     <RootNamespace>AutoLiftingClashAnalysis</RootNamespace>
+    <!-- Prevent implicit inclusion of all .cs files to avoid duplication if backup files exist -->
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
 
   <!-- Pacote para compatibilidade com .NET 4.8 -->
@@ -15,6 +17,17 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <!-- Explicitly include only the correct source files -->
+  <ItemGroup>
+    <Compile Include="LiftingClashPlugin.cs" />
+    <Compile Include="LiftingForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LiftingForm.Designer.cs">
+      <DependentUpon>LiftingForm.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
 
   <!-- Referências do Navisworks 2026 -->
@@ -37,18 +50,10 @@
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     
-    <!-- TENTATIVA 2: Referenciar Interop da pasta 'api' se não estiver na raiz -->
-    <Reference Include="Autodesk.Navisworks.Interop">
-      <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2026\api\Autodesk.Navisworks.Interop.dll</HintPath>
-      <EmbedInteropTypes>false</EmbedInteropTypes>
-      <Private>False</Private>
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-
-    <!-- Bridge COM Interop -->
+    <!-- FIX: Use EmbedInteropTypes=true to resolve namespace issues without external dependencies -->
     <Reference Include="Autodesk.Navisworks.Interop.ComApi">
       <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2026\Autodesk.Navisworks.Interop.ComApi.dll</HintPath>
-      <EmbedInteropTypes>false</EmbedInteropTypes>
+      <EmbedInteropTypes>true</EmbedInteropTypes>
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
