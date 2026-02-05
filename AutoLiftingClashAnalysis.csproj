@@ -37,7 +37,15 @@
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     
-    <!-- CORREÇÃO AQUI: EmbedInteropTypes DEVE SER 'false' PARA COMPILAR CORRETAMENTE NO VS CODE -->
+    <!-- DEPENDÊNCIA ADICIONADA: Base COM Interop -->
+    <Reference Include="Autodesk.Navisworks.Interop">
+      <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2026\Autodesk.Navisworks.Interop.dll</HintPath>
+      <EmbedInteropTypes>false</EmbedInteropTypes>
+      <Private>False</Private>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+
+    <!-- Bridge COM Interop -->
     <Reference Include="Autodesk.Navisworks.Interop.ComApi">
       <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2026\Autodesk.Navisworks.Interop.ComApi.dll</HintPath>
       <EmbedInteropTypes>false</EmbedInteropTypes>
