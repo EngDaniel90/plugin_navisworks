@@ -12,9 +12,8 @@ using Autodesk.Navisworks.Api.Plugins;
 // API de Ponte (Permite converter objetos .NET para COM)
 using Autodesk.Navisworks.Api.ComApi; 
 
-// API COM (Sistema antigo/interno do Navisworks - Necessário para mover objetos em NWD)
-// O Alias "ComApi" evita conflitos de nome
-using ComApi = Autodesk.Navisworks.Interop.ComApi;
+// REMOVEU-SE O ALIAS "ComApi" PARA EVITAR AMBIGUIDADE.
+// USANDO NAMESPACES COMPLETOS.
 
 namespace AutoLiftingClashAnalysis
 {
@@ -204,7 +203,8 @@ namespace AutoLiftingClashAnalysis
             var clashTestsData = doc.GetClash().TestsData;
 
             // OTIMIZAÇÃO: Converter para COM Selection apenas UMA vez antes do loop
-            ComApi.InwOpSelection comSelection = ComApiBridge.ToInwOpSelection(items);
+            // NOTA: Autodesk.Navisworks.Interop.ComApi.InwOpSelection é o tipo correto.
+            Autodesk.Navisworks.Interop.ComApi.InwOpSelection comSelection = ComApiBridge.ToInwOpSelection(items);
 
             try
             {
@@ -260,15 +260,15 @@ namespace AutoLiftingClashAnalysis
         // Estes métodos acessam o núcleo do Navisworks para mover objetos sem alterar o arquivo NWD (evita Read-Only)
         // ====================================================================================
 
-        private void MoveItemsUsingCOM(ComApi.InwOpSelection comSelection, double zMeters)
+        private void MoveItemsUsingCOM(Autodesk.Navisworks.Interop.ComApi.InwOpSelection comSelection, double zMeters)
         {
             try
             {
                 // 1. Obter o Estado Interno (State)
-                ComApi.InwOpState10 state = ComApiBridge.State;
+                Autodesk.Navisworks.Interop.ComApi.InwOpState10 state = ComApiBridge.State;
                 
                 // 2. Criar Objeto de Transformação 3D
-                ComApi.InwLTransform3f transform = (ComApi.InwLTransform3f)state.ObjectFactory(ComApi.nwEObjectType.eObjectType_nwLTransform3f, null, null);
+                Autodesk.Navisworks.Interop.ComApi.InwLTransform3f transform = (Autodesk.Navisworks.Interop.ComApi.InwLTransform3f)state.ObjectFactory(Autodesk.Navisworks.Interop.ComApi.nwEObjectType.eObjectType_nwLTransform3f, null, null);
                 
                 // 3. Definir Translação (Z em Pés)
                 double zFeet = zMeters * MeterToFoot;
@@ -283,14 +283,14 @@ namespace AutoLiftingClashAnalysis
             }
         }
 
-        private void ResetItemsUsingCOM(ComApi.InwOpSelection comSelection)
+        private void ResetItemsUsingCOM(Autodesk.Navisworks.Interop.ComApi.InwOpSelection comSelection)
         {
             try
             {
-                ComApi.InwOpState10 state = ComApiBridge.State;
+                Autodesk.Navisworks.Interop.ComApi.InwOpState10 state = ComApiBridge.State;
                 
                 // Para resetar, criamos uma transformação "Identidade" (sem movimento)
-                ComApi.InwLTransform3f transform = (ComApi.InwLTransform3f)state.ObjectFactory(ComApi.nwEObjectType.eObjectType_nwLTransform3f, null, null);
+                Autodesk.Navisworks.Interop.ComApi.InwLTransform3f transform = (Autodesk.Navisworks.Interop.ComApi.InwLTransform3f)state.ObjectFactory(Autodesk.Navisworks.Interop.ComApi.nwEObjectType.eObjectType_nwLTransform3f, null, null);
                 transform.MakeIdentity(); 
 
                 // Aplicando a identidade, removemos o deslocamento anterior
