@@ -37,9 +37,9 @@
       <SpecificVersion>False</SpecificVersion>
     </Reference>
     
-    <!-- DEPENDÊNCIA ADICIONADA: Base COM Interop -->
+    <!-- TENTATIVA 2: Referenciar Interop da pasta 'api' se não estiver na raiz -->
     <Reference Include="Autodesk.Navisworks.Interop">
-      <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2026\Autodesk.Navisworks.Interop.dll</HintPath>
+      <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2026\api\Autodesk.Navisworks.Interop.dll</HintPath>
       <EmbedInteropTypes>false</EmbedInteropTypes>
       <Private>False</Private>
       <SpecificVersion>False</SpecificVersion>
