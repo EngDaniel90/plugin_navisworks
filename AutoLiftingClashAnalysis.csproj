@@ -22,16 +22,19 @@
     <Reference Include="Autodesk.Navisworks.Api">
       <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2026\Autodesk.Navisworks.Api.dll</HintPath>
       <Private>False</Private>
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
     
     <Reference Include="Autodesk.Navisworks.Clash">
       <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2026\Autodesk.Navisworks.Clash.dll</HintPath>
       <Private>False</Private>
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
     
     <Reference Include="Autodesk.Navisworks.ComApi">
       <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2026\Autodesk.Navisworks.ComApi.dll</HintPath>
       <Private>False</Private>
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
     
     <!-- CORREÇÃO AQUI: EmbedInteropTypes DEVE SER 'false' PARA COMPILAR CORRETAMENTE NO VS CODE -->
@@ -39,6 +42,7 @@
       <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2026\Autodesk.Navisworks.Interop.ComApi.dll</HintPath>
       <EmbedInteropTypes>false</EmbedInteropTypes>
       <Private>False</Private>
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
     
     <Reference Include="System.Windows.Forms" />
