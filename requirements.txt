@@ -1,0 +1,7 @@
+selenium
+pandas
+openpyxl
+requests
+urllib3
+webdriver-manager
+pywin32
