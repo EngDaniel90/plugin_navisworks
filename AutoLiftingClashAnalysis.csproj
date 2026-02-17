@@ -7,9 +7,9 @@
     <PlatformTarget>x64</PlatformTarget>
     <AssemblyName>AutoLiftingClashAnalysis</AssemblyName>
     <RootNamespace>AutoLiftingClashAnalysis</RootNamespace>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
   </PropertyGroup>
 
-  <!-- Pacote para compatibilidade com .NET 4.8 -->
   <ItemGroup>
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3">
       <PrivateAssets>all</PrivateAssets>
@@ -17,28 +17,51 @@
     </PackageReference>
   </ItemGroup>
 
-  <!-- Referências do Navisworks 2026 -->
   <ItemGroup>
+    <Compile Include="LiftingClashPlugin.cs" />
+    <Compile Include="LiftingForm.cs" />
+    <Compile Include="LiftingForm.Designer.cs">
+      <DependentUpon>LiftingForm.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Navisworks API -->
     <Reference Include="Autodesk.Navisworks.Api">
       <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2026\Autodesk.Navisworks.Api.dll</HintPath>
       <Private>False</Private>
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
     
     <Reference Include="Autodesk.Navisworks.Clash">
       <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2026\Autodesk.Navisworks.Clash.dll</HintPath>
       <Private>False</Private>
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
     
     <Reference Include="Autodesk.Navisworks.ComApi">
       <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2026\Autodesk.Navisworks.ComApi.dll</HintPath>
       <Private>False</Private>
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
-    
-    <!-- CORREÇÃO AQUI: EmbedInteropTypes DEVE SER 'false' PARA COMPILAR CORRETAMENTE NO VS CODE -->
+
+    <!--
+       CRITICAL FIX:
+       Referencing both the base Interop DLL (from api folder) AND the ComApi Interop DLL.
+       Using EmbedInteropTypes="false" for both to avoid type ambiguity errors when using ComApiBridge.
+    -->
+    <Reference Include="Autodesk.Navisworks.Interop">
+      <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2026\api\Autodesk.Navisworks.Interop.dll</HintPath>
+      <EmbedInteropTypes>false</EmbedInteropTypes>
+      <Private>False</Private>
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+
     <Reference Include="Autodesk.Navisworks.Interop.ComApi">
       <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2026\Autodesk.Navisworks.Interop.ComApi.dll</HintPath>
       <EmbedInteropTypes>false</EmbedInteropTypes>
       <Private>False</Private>
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
     
     <Reference Include="System.Windows.Forms" />
