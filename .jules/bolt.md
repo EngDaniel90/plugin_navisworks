@@ -1,0 +1,3 @@
+## 2024-05-23 - Navisworks COM Interop Performance
+**Learning:** Navisworks .NET API (`Autodesk.Navisworks.Api`) bridges to the underlying COM API (`Autodesk.Navisworks.Interop.ComApi`) via `ComApiBridge`. Calls like `ComApiBridge.ToInwOpSelection(items)` involve marshalling managed objects to unmanaged COM objects, which is an O(N) operation. Doing this inside a high-frequency simulation loop kills performance.
+**Action:** Always hoist `ComApiBridge` calls outside of loops. Cache `InwOpState10` and `InwOpSelection` objects and pass them to helper methods instead of re-creating them every frame.
