@@ -1,0 +1,3 @@
+## 2024-05-24 - Optimizing Navisworks Simulation Loops
+**Learning:** Hardcoded `await Task.Delay()` calls in simulation loops within Navisworks Manage cause severe performance degradation by artificially capping throughput and blocking for fixed periods (e.g., 50ms) regardless of actual rendering needs.
+**Action:** Replace `await Task.Delay(50)` with `await Task.Yield()` to maintain UI responsiveness in pure logic loops. In geometry movement loops that strictly require Navisworks to render the new state before the next clash run, replace `Task.Delay` with `await Task.Yield(); Application.DoEvents();`. This ensures the rendering engine processes its message queue and updates the screen without waiting for an arbitrary minimum time, significantly speeding up the loop.
