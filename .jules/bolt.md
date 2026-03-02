@@ -1,0 +1,3 @@
+## 2024-05-24 - [Avoid Repetitive O(N) Marshalling in Navisworks COM API]
+**Learning:** Calling `ComApiBridge.ToInwOpSelection(items)` or accessing `ComApiBridge.State` inside tight Navisworks simulation loops creates a massive O(N) marshalling overhead per frame. The .NET-to-COM conversion is surprisingly expensive when applied repeatedly to large ModelItemCollections during visual updates.
+**Action:** Always cache the `ComApi.InwOpState10` and `ComApi.InwOpSelection` objects exactly once outside of any repetitive simulation or render loops, and pass these cached COM references down to helper methods (like transform overrides) to eliminate the overhead.
