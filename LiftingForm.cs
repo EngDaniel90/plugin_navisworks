@@ -123,7 +123,8 @@ namespace AutoLiftingClashAnalysis
                 foreach (SavedItem module in modules)
                 {
                     lblStatus.Text = $"Analisando: {module.DisplayName}";
-                    await Task.Delay(50); // Pequena pausa para a tela atualizar
+                    await Task.Yield(); // ⚡ Bolt: Yield instead of artificial delay
+                    System.Windows.Forms.Application.DoEvents(); // Pequena pausa para a tela atualizar
 
                     SelectionSet set = module as SelectionSet;
                     if (set == null) continue;
@@ -211,7 +212,8 @@ namespace AutoLiftingClashAnalysis
                 // LOOP DE DESCIDA
                 while (currentZMeters >= 0)
                 {
-                    await Task.Delay(50); // Delay crítico para o Navisworks renderizar a geometria nova
+                    await Task.Yield(); // ⚡ Bolt: Yield instead of artificial delay to maximize throughput
+                    System.Windows.Forms.Application.DoEvents(); // Força o Navisworks a renderizar a geometria nova sem travar
 
                     try 
                     {
