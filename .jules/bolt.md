@@ -1,0 +1,3 @@
+## 2024-05-24 - [Optimize Navisworks COM Marshalling and Clash Loop]
+ **Learning:** Repeatedly evaluating `ComApiBridge.State` and converting .NET `ModelItemCollection` to COM `InwOpSelection` inside a simulation loop creates an O(N) marshalling bottleneck. Furthermore, allowing collision tests to process all results and continue the main item descent loop after a collision is already detected wastes processing power.
+ **Action:** Always cache COM API state objects (`InwOpState10`) and selections (`InwOpSelection`) outside loops that iterate over the same items. Implement early exit strategies (`break`) in collision loops to stop processing test results and drop iterations immediately after a collision is confirmed.
