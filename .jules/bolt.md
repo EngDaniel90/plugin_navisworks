@@ -1,0 +1,3 @@
+## 2024-05-24 - [Avoid Redundant COM Marshalling in Simulation Loops]
+**Learning:** In Navisworks `LiftingForm.cs`, repeated calls to `ComApiBridge.State` and `ComApiBridge.ToInwOpSelection(items)` inside simulation loops (`RunSimulation`) incur significant overhead because they transition from managed to unmanaged space and reconstruct COM selection proxies every frame.
+**Action:** Cache the COM state (`InwOpState10`) and COM selection (`InwOpSelection`) *once* before the loop starts, then pass them to helper methods to apply the transform efficiently. This pattern should be standard for any frame-by-frame Navisworks API animation/simulation.
