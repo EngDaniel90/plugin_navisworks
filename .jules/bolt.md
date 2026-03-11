@@ -1,0 +1,3 @@
+## 2024-05-18 - [Navisworks COM API Overhead Reduction & Simulation Early Exit]
+ **Learning:** In Navisworks, calling `ComApiBridge.State` and `ComApiBridge.ToInwOpSelection()` inside a `while` simulation loop introduces significant O(N) COM API marshalling overhead. Furthermore, executing clash tests continuously after a collision has already been detected wastes cycles.
+ **Action:** Instantiate `InwOpState10` and `InwOpSelection` outside the loop and pass them to visualization helper methods. Implement `break` statements to stop clash testing immediately upon verifying a new or active collision. Replace `Task.Delay` with `Task.Yield()` and `Application.DoEvents()` to maintain responsive UI while unblocking the render thread without a fixed minimum latency.
