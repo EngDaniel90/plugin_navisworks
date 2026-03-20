@@ -1,0 +1,5 @@
+/app/obj/Debug/net48/AutoLiftingClashAnalysis.GeneratedMSBuildEditorConfig.editorconfig
+/app/obj/Debug/net48/AutoLiftingClashAnalysis.AssemblyInfoInputs.cache
+/app/obj/Debug/net48/AutoLiftingClashAnalysis.AssemblyInfo.cs
+/app/obj/Debug/net48/AutoLiftingClashAnalysis.csproj.CoreCompileInputs.cache
+/app/obj/Debug/net48/AutoLiftingClashAnalysis.sourcelink.json
