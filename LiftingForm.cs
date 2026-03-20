@@ -203,10 +203,25 @@ namespace AutoLiftingClashAnalysis
             bool collisionDetected = false;
             var clashTestsData = doc.GetClash().TestsData;
 
+            // ⚡ Bolt: Cache COM objects once to avoid O(N) marshalling overhead inside the simulation loop
+            ComApi.InwOpState10 cachedState = null;
+            ComApi.InwOpSelection cachedSelection = null;
+
+            try
+            {
+                cachedState = ComApiBridge.State;
+                cachedSelection = ComApiBridge.ToInwOpSelection(items);
+            }
+            catch (Exception ex)
+            {
+                // Re-throw or handle if COM initialization fails; bubbling up allows the simulation to gracefully skip if it can't create necessary COM hooks.
+                throw new InvalidOperationException("Falha ao inicializar estado COM para a simulação.", ex);
+            }
+
             try
             {
                 // Mover para o TOPO (Posição Inicial)
-                MoveItemsUsingCOM(items, currentZMeters);
+                MoveItemsUsingCOM(cachedState, cachedSelection, currentZMeters);
 
                 // LOOP DE DESCIDA
                 while (currentZMeters >= 0)
@@ -237,7 +252,7 @@ namespace AutoLiftingClashAnalysis
                     if (currentZMeters >= 0)
                     {
                         // Atualiza a posição visual
-                        MoveItemsUsingCOM(items, currentZMeters);
+                        MoveItemsUsingCOM(cachedState, cachedSelection, currentZMeters);
                     }
 
                     if (progressBar.Value < progressBar.Maximum) progressBar.Increment(1);
@@ -246,7 +261,10 @@ namespace AutoLiftingClashAnalysis
             finally
             {
                 // RESET FINAL: Garante que o objeto volte ao lugar original
-                ResetItemsUsingCOM(items);
+                if (cachedState != null && cachedSelection != null)
+                {
+                    ResetItemsUsingCOM(cachedState, cachedSelection);
+                }
             }
 
             return collisionDetected;
@@ -257,15 +275,11 @@ namespace AutoLiftingClashAnalysis
         // Estes métodos acessam o núcleo do Navisworks para mover objetos sem alterar o arquivo NWD (evita Read-Only)
         // ====================================================================================
 
-        private void MoveItemsUsingCOM(ModelItemCollection items, double zMeters)
+        private void MoveItemsUsingCOM(ComApi.InwOpState10 state, ComApi.InwOpSelection comSelection, double zMeters)
         {
             try
             {
-                // 1. Obter o Estado Interno (State)
-                ComApi.InwOpState10 state = ComApiBridge.State;
-                
-                // 2. Converter Seleção .NET para Seleção COM
-                ComApi.InwOpSelection comSelection = ComApiBridge.ToInwOpSelection(items);
+                // 1 e 2 removidos, agora recebendo via parâmetro para evitar marshalling repetitivo O(N)
 
                 // 3. Criar Objeto de Transformação 3D
                 ComApi.InwLTransform3f transform = (ComApi.InwLTransform3f)state.ObjectFactory(ComApi.nwEObjectType.eObjectType_nwLTransform3f, null, null);
@@ -283,13 +297,10 @@ namespace AutoLiftingClashAnalysis
             }
         }
 
-        private void ResetItemsUsingCOM(ModelItemCollection items)
+        private void ResetItemsUsingCOM(ComApi.InwOpState10 state, ComApi.InwOpSelection comSelection)
         {
             try
             {
-                ComApi.InwOpState10 state = ComApiBridge.State;
-                ComApi.InwOpSelection comSelection = ComApiBridge.ToInwOpSelection(items);
-                
                 // Para resetar, criamos uma transformação "Identidade" (sem movimento)
                 ComApi.InwLTransform3f transform = (ComApi.InwLTransform3f)state.ObjectFactory(ComApi.nwEObjectType.eObjectType_nwLTransform3f, null, null);
                 transform.MakeIdentity(); 
