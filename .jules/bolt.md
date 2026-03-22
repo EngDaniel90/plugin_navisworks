@@ -1,0 +1,4 @@
+
+## $(date +%Y-%m-%d) - Optimize Navisworks COM Iteration and RunSimulation Responsiveness
+**Learning:** In Navisworks plugins, frequently marshalling objects from .NET to COM (like `ComApiBridge.ToInwOpSelection`) inside tight simulation loops causes significant O(N) overhead. Additionally, blocking delays like `Task.Delay` block execution when we actually just need the UI to repaint and internal view to update. Using `Task.Yield()` along with `Application.DoEvents()` successfully forces the required render cycle without artificially throttling loop throughput.
+**Action:** When working with Navisworks COM interop, extract COM object resolution and marshalling (`ComApiBridge.State` and `ComApiBridge.ToInwOpSelection`) outside of iteration loops. Prefer `Task.Yield() + Application.DoEvents()` over hardcoded `Task.Delay` times to trigger rendering without wasting CPU time, and add early loop exits where possible.
