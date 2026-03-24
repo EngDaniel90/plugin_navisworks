@@ -1,0 +1,3 @@
+## 2024-05-24 - [Cache COM API Objects Outside Simulation Loop]
+ **Learning:** [In `LiftingForm.cs`, calling `ComApiBridge.ToInwOpSelection` inside a simulation loop causes repetitive O(N) marshalling overhead when interacting with the COM API. These objects do not change during the simulation loop.]
+ **Action:** [Cache `ComApi.InwOpState10` and `ComApi.InwOpSelection` objects before entering the loop to eliminate repetitive O(N) marshalling overhead.]
