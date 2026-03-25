@@ -227,8 +227,15 @@ namespace AutoLiftingClashAnalysis
                         if (cr != null && (cr.Status == ClashResultStatus.New || cr.Status == ClashResultStatus.Active))
                         {
                             collisionDetected = true;
-                            // Opcional: break; se quiser parar na primeira batida
+                            // ⚡ BOLT: Early exit from inner loop since we already found a collision
+                            break;
                         }
+                    }
+
+                    // ⚡ BOLT: Early exit from outer simulation loop to avoid redundant, expensive TestsRunTest calls
+                    if (collisionDetected)
+                    {
+                        break;
                     }
 
                     // Prepara próximo passo

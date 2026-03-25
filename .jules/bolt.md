@@ -1,0 +1,3 @@
+## 2024-05-24 - Early Exit in Navisworks Simulation Loops
+**Learning:** In Navisworks collision detection loops (like those using `TestsRunTest`), testing for clashes is extremely expensive. Continuing to test or loop through subsequent clash results after a valid collision has been detected introduces significant, redundant API overhead.
+**Action:** Always implement early exit strategies (`break` or `return`) as soon as a `ClashResultStatus.New` or `ClashResultStatus.Active` collision is detected to bypass the remainder of the analysis space and skip any further `TestsRunTest` executions within the iteration path.
