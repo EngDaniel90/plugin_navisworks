@@ -227,9 +227,13 @@ namespace AutoLiftingClashAnalysis
                         if (cr != null && (cr.Status == ClashResultStatus.New || cr.Status == ClashResultStatus.Active))
                         {
                             collisionDetected = true;
-                            // Opcional: break; se quiser parar na primeira batida
+                            // Optimização (Bolt): break para parar na primeira batida encontrada e poupar processamento
+                            break;
                         }
                     }
+
+                    // Optimização (Bolt): Sai do loop principal se houver colisão para evitar mais chamadas custosas do TestsRunTest
+                    if (collisionDetected) break;
 
                     // Prepara próximo passo
                     currentZMeters -= stepMeters;
