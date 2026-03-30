@@ -1,0 +1,3 @@
+## 2024-05-24 - Early Exit in Navisworks API Iterative Clash Testing
+**Learning:** `TestsRunTest` inside collision detection loops is exceptionally expensive in Navisworks plugins. Without early returns, unnecessary checks on remaining items introduce massive overhead after a valid collision is already discovered. The application state must be updated correctly on exit.
+**Action:** Always implement early `break` or `return` strategies out of all relevant loops as soon as a collision status (`New` or `Active`) is resolved. Remember to break out of *all* wrapping loops preventing subsequent `TestsRunTest` calls.
