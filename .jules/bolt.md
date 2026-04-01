@@ -1,0 +1,3 @@
+## 2024-04-01 - Optimizing Navisworks COM API Marshalling in Simulation Loops
+**Learning:** In Navisworks plugins, calling `ComApiBridge.State` and `ComApiBridge.ToInwOpSelection(items)` repeatedly inside a tight simulation loop causes significant O(N) memory marshalling overhead and drastically slows down performance. Also, `TestsRunTest` is computationally expensive.
+**Action:** Always cache the COM API State and Selection objects outside of loops. Additionally, implement early exit strategies (`break`) for expensive clash tests as soon as a collision is found to avoid redundant API overhead.
