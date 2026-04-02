@@ -1,0 +1,3 @@
+## 2025-02-15 - [Navisworks Simulation Loop Optimization]
+ **Learning:** In Navisworks collision detection loops, `TestsRunTest` is extremely computationally expensive. Also, accessing properties like `ComApiBridge.State` inside tight loops causes repeated `O(N)` marshalling overhead between .NET and COM boundaries.
+ **Action:** Always cache COM references and Navisworks document singletons outside simulation loops. Furthermore, always implement an early exit strategy (e.g., `break`) to immediately escape `TestsRunTest` loops as soon as a valid collision condition (`ClashResultStatus.New` or `ClashResultStatus.Active`) is met.
