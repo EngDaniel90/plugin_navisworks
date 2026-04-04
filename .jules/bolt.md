@@ -1,0 +1,3 @@
+## 2024-04-04 - Navisworks COM Selection Caching and Early Exit
+**Learning:** In Navisworks API interactions, repetitively converting .NET ModelItems to COM InwOpSelection inside simulation loops introduces major O(N) marshalling overhead. Additionally, the Navisworks clash engine `TestsRunTest` is computationally expensive and continues running even if a collision is found in an iteration if not explicitly halted.
+**Action:** Always cache `ComApiBridge.State` and `ComApiBridge.ToInwOpSelection` outside of simulation loops and pass the references to worker methods. Implement early exit strategies (`break`) in both the result evaluation and simulation loops to stop execution immediately once a collision is detected.
