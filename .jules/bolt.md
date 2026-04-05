@@ -1,0 +1,3 @@
+## 2026-04-05 - Optimize Navisworks COM API Marshalling and Clash Test Loop
+**Learning:** In Navisworks plugins, resolving COM objects `ComApiBridge.State` and `ComApiBridge.ToInwOpSelection` inside iterative simulation loops creates excessive O(N) marshalling overhead. Furthermore, executing `TestsRunTest` without early exit strategies wastes significant computational resources after a collision has already been detected.
+**Action:** Cache the required COM bridges globally or outside of loops, pass them as arguments to repetitive modifier functions, and always implement `break` checks for early exit as soon as a valid collision is processed to bypass subsequent unneeded and expensive API calls.
