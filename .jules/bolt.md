@@ -1,0 +1,3 @@
+## 2024-05-15 - [Navisworks API Overhead in Simulation Loops]
+**Learning:** In Navisworks collision detection loops, creating COM objects like `ComApiBridge.ToInwOpSelection(items)` repeatedly causes significant O(N) marshalling overhead. Additionally, `TestsRunTest` is an extremely expensive operation, yet the `RunSimulation` loop continues to execute it even after a collision has been successfully found.
+**Action:** Always cache `ComApiBridge.State` and `ComApiBridge.ToInwOpSelection` outside of animation/simulation loops to reuse COM objects. Implement early exit strategies (e.g., `break`) in simulation loops as soon as a valid clash is identified to skip redundant computational and visual overhead.
