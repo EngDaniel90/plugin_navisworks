@@ -1,0 +1,3 @@
+## 2024-05-18 - [COM Marshalling Overhead in Iterative Navisworks Simulations]
+**Learning:** During iterative simulations (like collision detection descents), recreating COM objects (`ComApiBridge.State` and `ComApiBridge.ToInwOpSelection`) inside the loop introduces a massive O(N) marshalling overhead per frame. Additionally, continuing to execute `TestsRunTest` and visual transform updates after a collision is found wastes expensive computational cycles.
+**Action:** Always cache COM references (`InwOpState10` and `InwOpSelection`) outside of simulation loops and pass them to helper functions. Furthermore, implement early exit strategies (`break` or `return`) the moment a valid condition (e.g., collision) is met to avoid redundant API interactions.
