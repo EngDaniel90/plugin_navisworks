@@ -1,0 +1,3 @@
+## 2024-05-24 - [Cache COM bridge state and add early exits in Navisworks loops]
+**Learning:** In Navisworks collision detection loops, computing `ComApiBridge.State` and `ComApiBridge.ToInwOpSelection` inside the animation loop introduces significant O(N) marshalling overhead. Also, `TestsRunTest` is computationally expensive, so it should be short-circuited via early exit when a valid collision is found.
+**Action:** Cache COM API state and selection properties outside simulation loops and pass them to manipulation methods. Always implement early exit (`break`) in test evaluation loops as soon as `ClashResultStatus.New` or `Active` is detected to avoid redundant visual updates and API overhead.
