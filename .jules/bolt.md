@@ -1,0 +1,3 @@
+## 2025-05-15 - [Avoid O(N) COM API Marshalling in Navisworks Simulation Loops]
+**Learning:** In Navisworks COM API integration, repeatedly resolving the internal COM state (`ComApiBridge.State`) and marshalling object selections (`ComApiBridge.ToInwOpSelection`) inside high-frequency simulation loops incurs severe O(N) overhead.
+**Action:** Always cache these COM API objects once outside the loop and pass them as parameters to visual manipulation functions (`MoveItemsUsingCOM`, `ResetItemsUsingCOM`) to significantly improve simulation frame rates and prevent redundant interop marshalling.
