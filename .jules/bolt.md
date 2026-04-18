@@ -1,0 +1,3 @@
+## 2024-04-18 - [COM Caching and Clash Detection Loop Exit Optimization]
+**Learning:** In Navisworks plugins, executing `TestsRunTest` iteratively within an animation or drop loop is extremely computationally expensive. Without early exits upon collision detection, redundant API calls significantly block the thread. Additionally, marshalling `ComApiBridge.State` and `ComApiBridge.ToInwOpSelection` repeatedly inside `MoveItemsUsingCOM` generates high O(N) overhead during the loop.
+**Action:** Always cache the COM state and selections outside simulation loops, passing them as arguments. Furthermore, always implement early loop termination (e.g., `break`) in simulation checks as soon as `ClashResultStatus.New` or `Active` occurs to bypass redundant computation.
