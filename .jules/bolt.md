@@ -1,0 +1,3 @@
+## 2024-04-21 - [Minimize COM Marshalling Overhead & Implement Early Exits]
+**Learning:** In Navisworks plugins dealing with `.NET` and `COM` bridging, continuous execution of `ComApiBridge.State` and `ComApiBridge.ToInwOpSelection` within tight simulation loops introduces significant O(N) performance overhead. Additionally, repeated clash tests (`TestsRunTest`) after a module has already clashed are computationally wasteful.
+**Action:** Always cache `InwOpState10` and `InwOpSelection` objects outside loops when moving model items in Navisworks. Furthermore, use early exits (`break`) to break out of expensive clash tests when a valid clash result is already found for a module.
