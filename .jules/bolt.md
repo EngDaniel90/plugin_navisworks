@@ -1,0 +1,3 @@
+## 2025-02-28 - COM API Caching and Early Exits in Navisworks Simulation Loops
+**Learning:** In Navisworks plugins, recalculating `ComApi.InwOpState10` and `ComApi.InwOpSelection` inside tight simulation loops (e.g., `MoveItemsUsingCOM`) introduces severe O(N) marshalling overhead. Additionally, `TestsRunTest` is computationally expensive and redundant if a collision is already found in the current step.
+**Action:** Cache COM API state objects once outside the simulation loop and pass them as arguments to helper methods. Always implement early `break` exits for both inner result checking loops and outer simulation loops as soon as a valid collision (`ClashResultStatus.New` or `Active`) is detected.
