@@ -1,0 +1,3 @@
+## 2024-05-24 - Navisworks COM Object Marshalling Overhead and Clash Testing
+**Learning:** Creating COM selections from .NET collections (`ComApiBridge.ToInwOpSelection`) repeatedly within a simulation loop (e.g., during visual transformations for clash tests) introduces significant O(N) marshalling overhead. Additionally, executing `TestsRunTest` is extremely computationally expensive.
+**Action:** Always cache `ComApiBridge.State` and `ComApiBridge.ToInwOpSelection` outside of high-frequency loops and pass the resulting COM objects to helper methods. Furthermore, implement early exit strategies (`break` or `return`) from both inner validation loops and outer simulation loops as soon as a valid collision is detected to prevent redundant clash tests.
