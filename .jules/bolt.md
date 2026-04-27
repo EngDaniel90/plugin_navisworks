@@ -1,0 +1,3 @@
+## 2024-04-27 - [Navisworks COM API Caching & Early Exit]
+ **Learning:** [Navisworks COM interop is highly expensive, resulting in O(N) marshalling overhead when calling `ComApiBridge.ToInwOpSelection` repeatedly inside a loop. Furthermore, Navisworks `TestsRunTest` is extremely computationally expensive within simulation loops, and unnecessary checks occur if the loop isn't broken upon finding an active clash.]
+ **Action:** [Cache `ComApiBridge.State` and `ComApiBridge.ToInwOpSelection` outside of simulation loops and pass the resolved COM objects to helper functions. Implement early exit (`break` or `return`) inside loops as soon as a valid collision is identified to avoid redundant API execution overhead.]
