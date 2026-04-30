@@ -1,0 +1,3 @@
+## 2024-05-20 - COM Marshalling Overhead in Navisworks Simulation Loops
+**Learning:** In Navisworks, calling `ComApiBridge.ToInwOpSelection()` inside a simulation loop (like a drop/lift test) causes O(N) marshalling overhead for the entire model selection on every step of the animation. Furthermore, `TestsRunTest` is extremely computationally expensive, and running it after a collision is found wastes significant time.
+**Action:** Always cache `ComApiBridge.State` and `ComApiBridge.ToInwOpSelection()` outside of animation or simulation loops and pass them to transform helpers. Implement early-exit (`break`) strategies for both the clash verification loop and the main simulation loop as soon as a valid collision is detected.
