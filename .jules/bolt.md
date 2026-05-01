@@ -1,0 +1,3 @@
+## 2024-05-24 - Navisworks COM Marshalling and Clash Test Performance
+**Learning:** In Navisworks API simulation loops, calling `ComApiBridge.State` and `ComApiBridge.ToInwOpSelection` repeatedly causes significant O(N) COM marshalling overhead. Furthermore, `TestsRunTest` is extremely computationally expensive.
+**Action:** Always cache `ComApiBridge.State` and the converted `InwOpSelection` outside of simulation loops and pass them to helper methods. Implement early exit strategies (`break` or `return`) as soon as a valid collision is found during clash tests to prevent redundant API overhead.
