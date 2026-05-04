@@ -1,0 +1,3 @@
+## 2024-05-04 - Cache COM API Objects Outside Simulation Loops
+**Learning:** Calling `ComApiBridge.State` and `ComApiBridge.ToInwOpSelection()` inside Navisworks collision detection loops causes significant O(N) marshalling overhead, slowing down the simulation. Additionally, executing `TestsRunTest` is extremely computationally expensive and redundant if a collision has already been detected.
+**Action:** Always cache COM API objects (`InwOpState10` and `InwOpSelection`) in local variables outside simulation loops and pass them to helper methods to avoid repetitive marshalling overhead. Implement an early exit strategy (`break`) as soon as a valid collision is found to prevent redundant `TestsRunTest` executions.
