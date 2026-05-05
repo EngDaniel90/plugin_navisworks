@@ -1,0 +1,3 @@
+## 2024-05-18 - Caching COM objects and early exiting Navisworks clash detection
+**Learning:** In Navisworks, accessing COM properties like `ComApiBridge.State` and `ComApiBridge.ToInwOpSelection(items)` during simulation loops introduces O(N) marshalling overhead. Redundant calls to `TestsRunTest` inside tight simulation loops are also computationally expensive, especially when a collision has already been detected.
+**Action:** Extract and cache `InwOpState10` and `InwOpSelection` outside of simulation loops and pass them as arguments to update methods (`MoveItemsUsingCOM`, `ResetItemsUsingCOM`). Additionally, implement early exits (`break`) from results and step loops immediately upon finding a valid collision to prevent redundant tests.
