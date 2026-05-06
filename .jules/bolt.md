@@ -1,0 +1,3 @@
+## 2026-05-06 - Navisworks Clash Simulation Loop Overhead
+**Learning:** Navisworks collision detection (TestsRunTest) is extremely computationally expensive. Additionally, converting .NET selections to COM selections (ComApiBridge.ToInwOpSelection) inside an iterative simulation loop causes severe O(N) marshalling overhead.
+**Action:** Always cache COM objects (`InwOpState10` and `InwOpSelection`) before entering loops. Implement early exit strategies (`break` or `return`) from both inner validation loops and outer simulation loops as soon as a clash is detected to prevent redundant API calls.
