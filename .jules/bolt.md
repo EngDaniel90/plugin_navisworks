@@ -1,0 +1,3 @@
+## 2023-10-27 - [Navisworks COM Marshalling & Clash Testing Overhead]
+**Learning:** In Navisworks plugins, instantiating COM objects (`ComApiBridge.State` and `ComApiBridge.ToInwOpSelection`) inside tight simulation loops causes significant O(N) marshalling overhead. Additionally, `TestsRunTest` is computationally expensive.
+**Action:** Always cache COM bridge state and selections outside of loops and pass them to helper methods. Implement strict early-exit strategies (`break`) in simulation loops to halt execution immediately after a target condition (like a collision) is met to avoid redundant engine processing.
