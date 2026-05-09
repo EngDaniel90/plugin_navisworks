@@ -1,0 +1,3 @@
+## 2024-05-09 - [Navisworks Simulation Performance Optimization]
+**Learning:** Repetitive COM object marshalling (`ComApiBridge.State` and `ComApiBridge.ToInwOpSelection`) and execution of computationally expensive clash tests (`TestsRunTest`) within loops cause severe performance bottlenecks in Navisworks.
+**Action:** Cache `InwOpState10` and `InwOpSelection` objects outside simulation loops and pass them to helper methods to eliminate O(N) marshalling overhead. Always implement early exit strategies (e.g., `break` or `return`) as soon as a valid collision is found to prevent redundant API overhead.
