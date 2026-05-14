@@ -1,0 +1,3 @@
+## 2024-05-14 - Navisworks COM API Overhead & Early Exits
+**Learning:** Navisworks internal COM API conversions (`ComApiBridge.State` and `ComApiBridge.ToInwOpSelection`) incur O(N) marshalling overhead when executed inside tight loops. Additionally, `TestsRunTest` is computationally expensive and its validation can be short-circuited.
+**Action:** When working with Navisworks COM API or simulation loops, always cache COM objects/selections outside the loop and implement early exit strategies (using `break` or `return`) as soon as the target state (e.g., a collision) is detected to prevent redundant processing.
