@@ -1,0 +1,3 @@
+## 2024-05-18 - Navisworks COM API Caching & Early Exit
+**Learning:** Calling `doc.GetClash().TestsData` and instantiating COM objects (`ComApiBridge.State` / `ComApiBridge.ToInwOpSelection`) inside tight simulation loops causes severe marshalling overhead in Navisworks. Furthermore, running tests iteratively (`TestsRunTest`) is computationally expensive and shouldn't continue once a valid collision is detected.
+**Action:** Always cache main Navisworks API objects and COM interfaces outside iterative loops. Pass the cached objects directly to COM manipulation helper methods. Always use early exit strategies (`break`) on inner collision validation loops and outer height step loops when the target failure state is met.
