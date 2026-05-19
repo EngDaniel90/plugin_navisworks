@@ -1,0 +1,3 @@
+## 2024-05-19 - Navisworks COM API Marshalling and Clash Test Performance
+**Learning:** In Navisworks API, properties like `doc.Models` and `doc.GetClash().TestsData` have high marshalling overhead. Also, COM API interaction (like `ComApiBridge.State` and `ToInwOpSelection`) inside simulation loops creates significant bottlenecks. Furthermore, executing `TestsRunTest` is extremely computationally expensive.
+**Action:** Always cache .NET and COM API objects outside of simulation loops. Implement early exit strategies (`break` or `return`) as soon as a collision is detected to prevent redundant API overhead.
