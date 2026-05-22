@@ -1,0 +1,3 @@
+## 2025-02-12 - Prevent Repetitive COM Marshalling Overhead in Simulation Loops
+**Learning:** In Navisworks, resolving COM API state objects (like `ComApiBridge.State` and `ComApiBridge.ToInwOpSelection`) inside a highly iterative simulation loop introduces unnecessary repetitive O(N) marshalling overhead which can severely degrade performance. Furthermore, repeatedly calling `TestsRunTest` is extremely computationally expensive.
+**Action:** Cache COM objects outside loops, passing them directly to helper functions. Implement early exits (`break`) to halt collision processing and inner loops immediately once a valid clash result is confirmed, completely skipping redundant `TestsRunTest` executions for subsequent stages.
