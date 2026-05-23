@@ -1,0 +1,4 @@
+## 2023-10-27 - Navisworks COM API Overhead and Clash Test Iteration
+
+**Learning:** In Navisworks, repeatedly calling `ComApiBridge.State` and `ComApiBridge.ToInwOpSelection()` inside tight simulation loops creates significant, unnecessary O(N) COM marshalling overhead. Additionally, `TestsRunTest()` is an extremely expensive operation; failing to exit early upon detecting a collision results in massive redundant computation.
+**Action:** Always cache COM objects (`InwOpState10`, `InwOpSelection`) before entering simulation or manipulation loops. Pass these cached references to helper methods to avoid redundant API bridging. Furthermore, implement early exit strategies (`break` or `return`) to terminate both inner validation loops and outer simulation loops immediately upon detecting a valid collision state.
