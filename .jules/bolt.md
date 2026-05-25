@@ -1,0 +1,3 @@
+## 2025-02-20 - [Optimize COM Object Instantiation and Add Early Exits in Navisworks Simulation Loops]
+**Learning:** Repetitive creation of Navisworks COM objects (`ComApiBridge.State`, `ComApiBridge.ToInwOpSelection`) inside a tight iteration loop causes significant O(N) marshalling overhead. Additionally, continuing to check clash results or descent steps after a collision is found in an expensive operation (`TestsRunTest`) leads to redundant API calls.
+**Action:** Always instantiate and cache COM objects once before entering simulation loops and pass them to helper methods. Implement `break` statements to exit expensive inner and outer loops immediately when the target condition (e.g., a collision) is met.
