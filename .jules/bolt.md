@@ -1,0 +1,3 @@
+## 2025-02-28 - Avoid O(N) Marshalling in Navisworks Loops
+**Learning:** In Navisworks plugins using COM Interop, constantly re-evaluating `ComApiBridge.State` and `ComApiBridge.ToInwOpSelection()` inside highly iterative loops (like clash simulation descents) incurs massive O(N) marshalling overhead, crippling performance. The engine also penalizes redundant `TestsRunTest` executions after collisions are already found.
+**Action:** Always cache COM `state` and `selection` objects outside of intensive loops and implement early exits (`break`) to bypass unnecessary clash tests as soon as a valid collision is confirmed.
