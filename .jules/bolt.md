@@ -1,0 +1,3 @@
+## 2025-02-20 - Navisworks COM API Marshalling and Clash Test Redundancy
+ **Learning:** In Navisworks, retrieving COM state (`ComApiBridge.State`) and marshalling object collections to COM format (`ComApiBridge.ToInwOpSelection`) inside high-frequency simulation loops incurs severe O(N) performance penalties. Additionally, executing `TestsRunTest` repeatedly after a collision is already found in the current height step adds unnecessary processing overhead.
+ **Action:** Cache COM objects outside simulation loops to perform the marshalling overhead only once. Always implement immediate early exits (`break`) from both the results validation inner loop and the height stepping outer loop as soon as a valid collision is confirmed.
