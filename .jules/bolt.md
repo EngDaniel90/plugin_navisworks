@@ -1,0 +1,3 @@
+## 2024-05-24 - [Avoid Repeated Marshalling in Navisworks Simulation Loops]
+**Learning:** In Navisworks collision detection loops, repetitive calls to bridging methods like `ComApiBridge.State` and `ComApiBridge.ToInwOpSelection` within the main simulation loop introduce significant O(N) marshalling overhead. Additionally, the clash engine continues processing redundant tests even after a collision is found.
+**Action:** Cache COM state objects outside simulation loops to avoid repeated marshalling. Implement early exit strategies (`break` or `return`) as soon as a valid collision is identified to prevent redundant API overhead.
