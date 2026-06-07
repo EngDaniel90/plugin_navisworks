@@ -1,0 +1,4 @@
+
+## 2024-05-18 - [Optimize COM Object Allocation and Implement Early Exit Strategy in Collision Detection Loop]
+**Learning:** In Navisworks API collision loops, repetitive calls to `ComApiBridge.State` and `ComApiBridge.ToInwOpSelection` inside high-frequency visualization loops (`MoveItemsUsingCOM`, `ResetItemsUsingCOM`) create severe marshalling overhead. Furthermore, `TestsRunTest` is computationally expensive and shouldn't continue running once a single collision is detected within an iterative height-step simulation.
+**Action:** Always cache COM bridged objects (`state`, `comSelection`) outside of iterative visual loops. Pass these cached objects down to helper manipulation methods to achieve `O(1)` initialization instead of `O(N)`. Additionally, ensure an early exit strategy (`break`) is implemented to immediately halt inner test result verification and outer simulation loops as soon as a positive collision condition is met, preventing redundant API overhead.
