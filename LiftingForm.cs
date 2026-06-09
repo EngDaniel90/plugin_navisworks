@@ -203,10 +203,14 @@ namespace AutoLiftingClashAnalysis
             bool collisionDetected = false;
             var clashTestsData = doc.GetClash().TestsData;
 
+            // 1. Obter o Estado Interno (State) e Seleção COM uma vez (Performance)
+            ComApi.InwOpState10 state = ComApiBridge.State;
+            ComApi.InwOpSelection comSelection = ComApiBridge.ToInwOpSelection(items);
+
             try
             {
                 // Mover para o TOPO (Posição Inicial)
-                MoveItemsUsingCOM(items, currentZMeters);
+                MoveItemsUsingCOM(items, currentZMeters, state, comSelection);
 
                 // LOOP DE DESCIDA
                 while (currentZMeters >= 0)
@@ -227,8 +231,13 @@ namespace AutoLiftingClashAnalysis
                         if (cr != null && (cr.Status == ClashResultStatus.New || cr.Status == ClashResultStatus.Active))
                         {
                             collisionDetected = true;
-                            // Opcional: break; se quiser parar na primeira batida
+                            break; // Sai do loop interno na primeira batida para otimização
                         }
+                    }
+
+                    if (collisionDetected)
+                    {
+                        break; // Sai do loop principal de descida para evitar testes de clash adicionais
                     }
 
                     // Prepara próximo passo
@@ -237,7 +246,7 @@ namespace AutoLiftingClashAnalysis
                     if (currentZMeters >= 0)
                     {
                         // Atualiza a posição visual
-                        MoveItemsUsingCOM(items, currentZMeters);
+                        MoveItemsUsingCOM(items, currentZMeters, state, comSelection);
                     }
 
                     if (progressBar.Value < progressBar.Maximum) progressBar.Increment(1);
@@ -246,7 +255,7 @@ namespace AutoLiftingClashAnalysis
             finally
             {
                 // RESET FINAL: Garante que o objeto volte ao lugar original
-                ResetItemsUsingCOM(items);
+                ResetItemsUsingCOM(items, state, comSelection);
             }
 
             return collisionDetected;
@@ -257,17 +266,11 @@ namespace AutoLiftingClashAnalysis
         // Estes métodos acessam o núcleo do Navisworks para mover objetos sem alterar o arquivo NWD (evita Read-Only)
         // ====================================================================================
 
-        private void MoveItemsUsingCOM(ModelItemCollection items, double zMeters)
+        private void MoveItemsUsingCOM(ModelItemCollection items, double zMeters, ComApi.InwOpState10 state, ComApi.InwOpSelection comSelection)
         {
             try
             {
-                // 1. Obter o Estado Interno (State)
-                ComApi.InwOpState10 state = ComApiBridge.State;
-                
-                // 2. Converter Seleção .NET para Seleção COM
-                ComApi.InwOpSelection comSelection = ComApiBridge.ToInwOpSelection(items);
-
-                // 3. Criar Objeto de Transformação 3D
+                // Criar Objeto de Transformação 3D
                 ComApi.InwLTransform3f transform = (ComApi.InwLTransform3f)state.ObjectFactory(ComApi.nwEObjectType.eObjectType_nwLTransform3f, null, null);
                 
                 // 4. Definir Translação (Z em Pés)
@@ -283,13 +286,10 @@ namespace AutoLiftingClashAnalysis
             }
         }
 
-        private void ResetItemsUsingCOM(ModelItemCollection items)
+        private void ResetItemsUsingCOM(ModelItemCollection items, ComApi.InwOpState10 state, ComApi.InwOpSelection comSelection)
         {
             try
             {
-                ComApi.InwOpState10 state = ComApiBridge.State;
-                ComApi.InwOpSelection comSelection = ComApiBridge.ToInwOpSelection(items);
-                
                 // Para resetar, criamos uma transformação "Identidade" (sem movimento)
                 ComApi.InwLTransform3f transform = (ComApi.InwLTransform3f)state.ObjectFactory(ComApi.nwEObjectType.eObjectType_nwLTransform3f, null, null);
                 transform.MakeIdentity(); 
