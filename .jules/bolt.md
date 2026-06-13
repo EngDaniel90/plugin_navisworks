@@ -1,0 +1,3 @@
+## 2024-05-24 - Navisworks COM API Marshalling Bottleneck & Redundant Clash Tests
+**Learning:** In Navisworks plugins, `ComApiBridge.ToInwOpSelection` operates in O(N) time and involves significant marshalling overhead. Calling this repeatedly inside an animation/simulation loop for the same items drastically degrades performance. Additionally, executing `TestsRunTest` is computationally expensive and shouldn't run after a collision is found.
+**Action:** Cache the resulting `InwOpSelection` and `InwOpState10` once before the simulation loop begins, passing them to helper methods to avoid redundant conversions. Furthermore, implement an early exit strategy to break out of the clash detection loop as soon as a valid collision is found.
