@@ -1,0 +1,3 @@
+## 2024-10-24 - [Avoid O(N) COM Marshalling in Simulation Loops]
+**Learning:** In Navisworks plugins, `ComApiBridge.ToInwOpSelection()` is an O(N) operation that marshals .NET `ModelItemCollection` to COM `InwOpSelection`. Running this inside tight simulation loops (e.g., iterative height stepping) causes severe performance degradation, especially with large selections. Furthermore, executing `TestsRunTest` is computationally expensive and must be bypassed as soon as a collision is detected.
+**Action:** Always cache `ComApiBridge.State` and `ComApiBridge.ToInwOpSelection(items)` outside of loops and pass the references down to COM helper methods. Implement aggressive early-exit (`break`/`return`) from clash testing loops as soon as a valid collision is identified.
