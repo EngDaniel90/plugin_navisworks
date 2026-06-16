@@ -1,0 +1,3 @@
+## 2024-05-24 - [COM API Marshalling & TestsRunTest Bottleneck Optimization]
+ **Learning:** In Navisworks plugins, recalculating `ComApiBridge.State` and `ComApiBridge.ToInwOpSelection()` inside a simulation loop creates massive O(N) marshalling overhead. Furthermore, `TestsRunTest` is a highly expensive operation; running it without an early exit strategy when a collision has already been detected leads to redundant processing.
+ **Action:** Always cache `ComApiBridge.State` and `InwOpSelection` objects outside of tight simulation loops to avoid repetitive marshalling. Additionally, always implement an early exit (`break` or `return`) from collision detection loops immediately when a valid `ClashResult` is found.
