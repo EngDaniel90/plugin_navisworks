@@ -1,0 +1,3 @@
+## 2025-05-18 - [COM API Parameter Caching & Clash Test Early Exits in Navisworks]
+ **Learning:** In Navisworks plugins, executing `TestsRunTest` is extremely computationally expensive. Running it repeatedly in a loop without stopping immediately on the first collision wastes critical performance cycles. Additionally, marshalling .NET objects to COM objects inside a high-frequency simulation loop causes significant O(N) overhead.
+ **Action:** Always implement early exit strategies (`break` or `return`) as soon as a valid clash result is found during iterative tests. Cache `ComApiBridge.State` and `ComApiBridge.ToInwOpSelection` once outside of simulation loops and pass them to internal COM manipulation methods to eliminate repetitive marshalling overhead.
