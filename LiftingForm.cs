@@ -227,8 +227,13 @@ namespace AutoLiftingClashAnalysis
                         if (cr != null && (cr.Status == ClashResultStatus.New || cr.Status == ClashResultStatus.Active))
                         {
                             collisionDetected = true;
-                            // Opcional: break; se quiser parar na primeira batida
+                            break; // ⚡ Bolt: Early exit inner loop on first collision
                         }
+                    }
+
+                    if (collisionDetected)
+                    {
+                        break; // ⚡ Bolt: Early exit outer loop to prevent expensive redundant TestsRunTest
                     }
 
                     // Prepara próximo passo
@@ -240,7 +245,10 @@ namespace AutoLiftingClashAnalysis
                         MoveItemsUsingCOM(items, currentZMeters);
                     }
 
-                    if (progressBar.Value < progressBar.Maximum) progressBar.Increment(1);
+                    if (progressBar.Value < progressBar.Maximum)
+                    {
+                        progressBar.Increment(1);
+                    }
                 }
             }
             finally

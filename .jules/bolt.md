@@ -1,0 +1,3 @@
+## 2024-05-24 - [Avoid Redundant Navisworks API Executions in Collision Detection]
+**Learning:** Navisworks API methods like `TestsRunTest` are computationally expensive. Iterating through further loop steps without an early exit strategy after a collision has already been detected results in significant and redundant overhead, dramatically degrading performance in simulation contexts.
+**Action:** Always implement early exits (`break` or `return`) from both inner iteration and outer processing loops in collision logic as soon as a valid collision is identified to bypass unnecessary Navisworks API executions.
