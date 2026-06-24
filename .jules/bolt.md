@@ -1,0 +1,3 @@
+## 2024-10-24 - Navisworks COM API Marshalling and TestsRunTest Overhead
+**Learning:** In Navisworks API simulation loops (specifically within `LiftingForm.cs`), performing O(N) COM object marshalling (`ComApiBridge.State`, `ComApiBridge.ToInwOpSelection`) inside the loop, and repeatedly calling the expensive `TestsRunTest` even after a collision is found, creates severe performance bottlenecks.
+**Action:** Always cache state and selection objects before entering simulation loops, passing them as arguments to helper methods. Implement strict early-exit strategies (`break`) for both result-checking loops and primary simulation loops the moment a collision is detected to prevent further redundant computations.
