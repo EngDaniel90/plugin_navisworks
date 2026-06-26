@@ -1,0 +1,3 @@
+## 2024-06-25 - Repetitive COM API Marshalling in Simulation Loops
+**Learning:** In Navisworks plugins, fetching `ComApiBridge.State` and converting .NET items to COM items (`ComApiBridge.ToInwOpSelection`) inside a simulation loop causes significant repetitive COM marshalling overhead, slowing down the loop execution. Also, continuing to run `TestsRunTest` after a collision is found wastes CPU cycles.
+**Action:** Always cache `ComApiBridge.State` and the converted `InwOpSelection` outside of performance-critical loops and pass them to helper methods. Implement early exit strategies (`break` or `return`) in simulation loops as soon as a collision is detected.
