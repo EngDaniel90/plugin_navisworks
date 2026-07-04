@@ -1,0 +1,3 @@
+## 2024-05-24 - [Avoid Redundant API Calls and Marshalling Overhead in Navisworks]
+**Learning:** In Navisworks collision detection loops, executing `TestsRunTest` is computationally expensive and modifying COM objects repetitively introduces O(N) marshalling overhead.
+**Action:** Implement early exits (e.g., `break` or `return`) as soon as a collision is found to skip redundant `TestsRunTest` executions. Cache `ComApiBridge.State` and `ComApiBridge.ToInwOpSelection` outside simulation loops and pass the cached objects to helpers (`MoveItemsUsingCOM`, `ResetItemsUsingCOM`) to eliminate O(N) overhead.
